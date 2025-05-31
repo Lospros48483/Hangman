@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <title>Hangman</title>
+</head>
+<body>
+    <div class="Title">
+        <h1>Hangman</h1>
+        <div>
+            <img src="1.png" id="photo1" height="100" width="100">
+            <img src="1.png" id="photo2" height="100" width="100">
+            <img src="1.png" id="photo3" height="100" width="100">
+            <img src="1.png" id="photo4" height="100" width="100">
+            <img src="1.png" id="photo5" height="100" width="100">
+        </div>
+
+        <div class="hangman">
+            <div class="emoji">
+                <p id="emoji"></p>
+            </div>
+            <p id="count"></p>
+        </div>
+    </div>
+
+    <div class="Send" id="Send">
+        <input type="text" oninput="check()" id="Letter" placeholder="Put a letter!">
+    </div>
+
+    <div class="use">
+        <p id="use">Words you have used: </p>
+        <div class="relode">
+            <input id="relode" type="button" onclick="window.location.reload();" value="Restart">
+        </div>
+    </div>
+
+    <script>
+
+        function getRandomInt(max) {
+            return Math.floor(Math.random() * max);
+        }
+
+        var snd1 = new Audio("break.mp3");
+        let tried = []
+        let lives = 5
+        let change_list = ["photo1", "photo2", "photo3", "photo4", "photo5"]
+        let words = [
+"h e l l o", "c a r", "c a t", "g o o d", "m o r n i n g", "m o n d a y", "t o d a y", "s l e e p", "h a v e", "i n d e x", "s e n d", "l o o k", "b e a u t i f u l", "n e v e r", "b u i l d i n g", "j o b", "w o r k i n g",
+"a p p l e", "b a n a n a", "c h a i r", "t a b l e", "w a t e r", "f l o w e r", "g r a s s", "s k y", "c l o u d", "r a i n", "s n o w", "s u n", "m o o n", "s t a r", "p l a n e t", "e a r t h", "m a r s", "v e n u s", "j u p i t e r", "s a t u r n",
+"c o m p u t e r", "l a p t o p", "k e y b o a r d", "m o u s e", "s c r e e n", "m o n i t o r", "p r i n t e r", "c a m e r a", "p h o n e", "t a b l e t", "b o o k", "p e n", "p e n c i l", "e r a s e r", "p a p e r", "n o t e", "d e s k", "c l o c k", "w a t c h", "t i m e",
+"f r i e n d", "f a m i l y", "m o t h e r", "f a t h e r", "s i s t e r", "b r o t h e r", "u n c l e", "a u n t", "c o u s i n", "g r a n d m a", "g r a n d p a", "b a b y", "c h i l d", "t e a c h e r", "s t u d e n t", "s c h o o l", "c l a s s", "l e s s o n", "h o m e w o r k", "e x a m",
+"c i t y", "t o w n", "v i l l a g e", "s t r e e t", "r o a d", "h o u s e", "a p a r t m e n t", "r o o m", "d o o r", "w i n d o w", "b e d", "c h a i r", "s o f a", "t a b l e", "k i t c h e n", "b a t h r o o m", "g a r d e n", "y a r d", "p a r k", "b r i d g e",
+"c a t", "d o g", "b i r d", "f i s h", "h o r s e", "c o w", "s h e e p", "g o a t", "p i g", "c h i c k e n", "d u c k", "g o o s e", "r a b b i t", "m o u s e", "r a t", "l i o n", "t i g e r", "b e a r", "w o l f", "f o x",
+"t r e e", "b u s h", "g r a s s", "l e a f", "f l o w e r", "r o s e", "t u l i p", "d a i s y", "l i l y", "v i o l e t", "o r c h i d", "p i n e", "o a k", "m a p l e", "p a l m", "b a m b o o", "c a c t u s", "m o s s", "f e r n", "w e e d",
+"c o f f e e", "t e a", "m i l k", "j u i c e", "w a t e r", "s o d a", "b e e r", "w i n e", "b r e a d", "r i c e", "p a s t a", "s o u p", "s a l a d", "m e a t", "f i s h", "c h i c k e n", "e g g", "c h e e s e", "b u t t e r", "y o g u r t",
+"c a r", "b u s", "t r a i n", "p l a n e", "b o a t", "s h i p", "b i k e", "m o t o r", "t r u c k", "v a n", "t a x i", "s u b w a y", "m e t r o", "t r a m", "s c o o t e r", "s k a t e", "h e l i c o p t e r", "j e t", "y a c h t", "f e r r y",
+"r e d", "b l u e", "g r e e n", "y e l l o w", "o r a n g e", "p u r p l e", "p i n k", "b r o w n", "b l a c k", "w h i t e", "g r a y", "g o l d", "s i l v e r", "b r o n z e", "b e i g e", "m a r o o n", "n a v y", "t e a l", "t u r q u o i s e", "i n d i g o",
+"m o n d a y", "t u e s d a y", "w e d n e s d a y", "t h u r s d a y", "f r i d a y", "s a t u r d a y", "s u n d a y", "j a n u a r y", "f e b r u a r y", "m a r c h", "a p r i l", "m a y", "j u n e", "j u l y", "a u g u s t", "s e p t e m b e r", "o c t o b e r", "n o v e m b e r", "d e c e m b e r", "y e a r",
+"s p r i n g", "s u m m e r", "a u t u m n", "w i n t e r", "s e a s o n", "w e a t h e r", "c l o u d y", "s u n n y", "r a i n y", "s n o w y", "w i n d y", "s t o r m y", "f o g g y", "h o t", "c o l d", "w a r m", "c o o l", "d r y", "w e t", "f r e e z e",
+"h a p p y", "s a d", "a n g r y", "s c a r e d", "e x c i t e d", "b o r e d", "t i r e d", "h u n g r y", "t h i r s t y", "s i c k", "h e a l t h y", "b u s y", "l a z y", "c a l m", "n e r v o u s", "p r o u d", "s h y", "b r a v e", "f r i e n d l y", "m e a n",
+"r u n", "w a l k", "j u m p", "s w i m", "r i d e", "d r i v e", "f l y", "c l i m b", "s i t", "s t a n d", "l i e", "s l e e p", "e a t", "d r i n k", "r e a d", "w r i t e", "d r a w", "p a i n t", "s i n g", "d a n c e",
+"o p e n", "c l o s e", "s t a r t", "s t o p", "g o", "c o m e", "l e a v e", "a r r i v e", "e n t e r", "e x i t", "b u y", "s e l l", "p a y", "g i v e", "t a k e", "s e n d", "r e c e i v e", "f i n d", "l o s e", "k e e p",
+"l o v e", "l i k e", "h a t e", "w a n t", "n e e d", "k n o w", "t h i n k", "b e l i e v e", "r e m e m b e r", "f o r g e t", "u n d e r s t a n d", "h e a r", "l i s t e n", "s e e", "l o o k", "w a t c h", "t a s t e", "s m e l l", "t o u c h", "f e e l",
+"b i g", "s m a l l", "l a r g e", "t i n y", "t a l l", "s h o r t", "l o n g", "w i d e", "n a r r o w", "d e e p", "s h a l l o w", "h i g h", "l o w", "f a s t", "s l o w", "q u i c k", "e a r l y", "l a t e", "n e w", "o l d",
+"y o u n g", "a g e d", "g o o d", "b a d", "b e t t e r", "w o r s t", "b e s t", "w o n d e r f u l", "a w f u l", "e a s y", "h a r d", "d i f f i c u l t", "s i m p l e", "c o m p l i c a t e d", "r i c h", "p o o r", "e m p t y", "f u l l", "h e a v y", "l i g h t",
+"c l e a n", "d i r t y", "w e t", "d r y", "s o f t", "h a r d", "s t r o n g", "w e a k", "b r i g h t", "d a r k", "n o i s y", "q u i e t", "l o u d", "s i l e n t", "w a r m", "c o o l", "h o t", "c o l d", "s w e e t", "s o u r",
+"s a l t y", "b i t t e r", "s p i c y", "f r e s h", "s t a l e", "r i p e", "r a w", "c o o k e d", "b a k e d", "f r i e d", "b o i l e d", "g r i l l e d", "r o a s t e d", "s t e a m e d", "b r o i l e d", "s m o k e d", "f r o z e n", "c h i l l e d", "h o t", "c o l d",
+"m o r n i n g", "a f t e r n o o n", "e v e n i n g", "n i g h t", "d a y", "w e e k", "m o n t h", "y e a r", "d e c a d e", "c e n t u r y", "m i n u t e", "h o u r", "s e c o n d", "t i m e", "d a t e", "y e s t e r d a y", "t o d a y", "t o m o r r o w", "n o w", "l a t e r",
+"f i r s t", "s e c o n d", "t h i r d", "f o u r t h", "f i f t h", "s i x t h", "s e v e n t h", "e i g h t h", "n i n t h", "t e n t h", "l a s t", "n e x t", "o t h e r", "a n o t h e r", "s a m e", "d i f f e r e n t", "m o r e", "l e s s", "m o s t", "l e a s t"
+];
+        let chouse_word = words[getRandomInt(words.length)];
+        const letter_word = chouse_word.split(" ");
+        let word = "";
+        let temp = "_ ".repeat(letter_word.length);
+        let list_word = temp.split(" ");
+        let lettersToCheck = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'z', 'x', 'c', 'v', 'b', 'n', 'm'];
+        let anyTried = lettersToCheck.some(letter => tried.includes(letter));
+        document.getElementById("count").innerHTML = list_word.join(" ");
+        for (let index = 0; index < letter_word.length; index++) {
+            word += letter_word[index];
+        }
+
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1)
+        }
+
+        function check() {
+            let Value = document.getElementById("Letter").value.toLowerCase();
+            let found = false;
+
+            if (Value.length > 0) {
+                for (let i = 0; i < letter_word.length; i++) {
+                    if (Value === letter_word[i]) {
+                        list_word[i] = Value;
+                        found = true;
+                    }
+                }
+
+                if (!found && !tried.includes(Value)) {
+                    if (lives > 0) {
+                        document.getElementById(change_list[5 - lives]).src = "2.png";
+                        document.getElementById(change_list[5 - lives]).height = "100";
+                        document.getElementById(change_list[5 - lives]).width = "100";
+                        tried.push(Value);
+                        lives -= 1;
+                        snd1.volume = 0.2;
+                        snd1.play();
+                    }
+                    if (lives <= 0) {
+                        document.getElementById("emoji").innerHTML = "😢 Try again with the button below!";
+                        alert("The word was... " + capitalizeFirstLetter(word) + "!!!");
+                    }
+                }
+
+                if (!list_word.includes("_")) {
+                    alert("You guessed it!");
+                    document.getElementById("emoji").innerHTML = "☺️ Well done! Play again with the button below!";
+                    lives = "hehe";
+                }
+
+                document.getElementById("use").innerHTML = "Words you have used: " + tried.join(" ");
+                document.getElementById("count").innerHTML = list_word.join(" ");
+                document.getElementById("Letter").value = "";
+            }
+        }
+    </script>
+</body>
+</html>

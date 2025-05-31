@@ -1,0 +1,37 @@
+.Title{
+    font-family: "Bangers", system-ui;
+    font-size: 50px;
+    text-align: center;
+}
+
+.Send{
+    text-align: center;
+}
+
+.relode{
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+.hangman{
+    font-family: "Bangers", system-ui;
+    font-size: 25px;
+    text-align: center;
+}
+
+.use{
+    font-family: "Bangers", system-ui;
+    font-size: 25px;
+    text-align: center;
+}
+
+.emoji{
+    font-family: "Bangers", system-ui;
+    font-size: 35px;
+    text-align: center;
+}
+
+body{
+    background-color: lightblue;
+}
